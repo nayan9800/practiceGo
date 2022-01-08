@@ -117,4 +117,7 @@ func main() {
 	fmt.Printf("%f has type %T\n", f2, f2)
 	ui := uint(i)
 	fmt.Printf("%d has type %T\n", ui, ui)
+
+	//control and loops
+	controlAndLoops()
 }

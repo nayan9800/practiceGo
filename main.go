@@ -120,4 +120,8 @@ func main() {
 
 	//control and loops
 	controlAndLoops()
+
+	//pointers
+	pointers()
+
 }

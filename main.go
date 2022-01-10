@@ -124,4 +124,6 @@ func main() {
 	//pointers
 	pointers()
 
+	//more types
+	moreTypes()
 }

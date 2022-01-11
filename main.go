@@ -126,4 +126,7 @@ func main() {
 
 	//more types
 	moreTypes()
+
+	//method and interfaces
+	MethodsAndInterfaces()
 }

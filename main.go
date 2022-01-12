@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"time"
 )
 
 /*1. Functions*/
@@ -129,4 +130,92 @@ func main() {
 
 	//method and interfaces
 	MethodsAndInterfaces()
+
+	/*Go Concurrency*/
+	//Concurrency in go is done by goroutines
+	//A goroutine is a lightweight thread managed by the Go runtime.
+	fmt.Println("---Go Cocurreny---")
+	//Here greet method is executing in another goroutine
+	go greet("D", "E", "F")
+	//here greet method is executing in main goroutine
+	greet("A", "B", "C")
+
+	//Channels
+	//Channels are used to communicate information between goroutines.
+	//Channels are decalred using make function
+	// by default channels sends and receives block until the other side is ready
+	s := []int{7, 2, 8, -9, 4, 0}
+	ch := make(chan int)
+	go sumNums(s[:len(s)/2], ch)
+	go sumNums(s[len(s)/2:], ch)
+	// receive value from channel
+	x, y := <-ch, <-ch
+	fmt.Println(x, y, x+y)
+
+	//Channels can also buffered
+	//here chB is Buffered channel with size
+	chB := make(chan int, 2)
+	chB <- 2
+	chB <- 3
+	fmt.Println(<-chB)
+	fmt.Println(<-chB)
+
+	//goroutine can also be worked with anonymous
+	go func(in chan int) {
+		for i := 0; i < 10; i++ {
+			time.Sleep(100 * time.Millisecond)
+			in <- i
+		}
+		close(in)
+	}(chB)
+
+	//range receives values from the channel repeatedly until it is closed.
+	for i := range chB {
+		fmt.Println(i)
+	}
+
+	nums := make(chan int)
+	quit := make(chan int)
+	go func() {
+		for i := 0; i < 10; i++ {
+			fmt.Println(<-nums)
+		}
+		quit <- 0
+	}()
+	fib(nums, quit)
+}
+
+//In this greet method time.Sleep() method
+//to slow main goroutine
+func greet(names ...string) {
+	for _, name := range names {
+		time.Sleep(100 * time.Millisecond)
+		fmt.Println("Hello ", name)
+	}
+}
+
+func sumNums(nums []int, c chan int) {
+	sum := 0
+	for _, n := range nums {
+		sum = sum + n
+	}
+	//Send Value to channel
+	c <- sum
+
+}
+
+/*Here select is use with channel,just
+like with other types select wait for multiple
+channel operations*/
+func fib(c, quit chan int) {
+	x, y := 0, 1
+	for {
+		select {
+		case c <- x:
+			x, y = y, x+y
+		case <-quit:
+			fmt.Println("quit")
+			return
+		}
+	}
 }

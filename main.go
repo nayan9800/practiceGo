@@ -2,7 +2,10 @@ package main
 
 import (
 	"fmt"
+	"strings"
 	"time"
+
+	"github.com/nayan9800/practiceGo/syncpract"
 )
 
 /*1. Functions*/
@@ -183,6 +186,10 @@ func main() {
 		quit <- 0
 	}()
 	fib(nums, quit)
+
+	/*More Concurrency*/
+	fmt.Println(strings.Repeat("-", 5) + "More concurrency" + strings.Repeat("-", 5))
+	syncpract.Run()
 }
 
 //In this greet method time.Sleep() method

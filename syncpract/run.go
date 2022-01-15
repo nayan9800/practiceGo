@@ -2,6 +2,7 @@ package syncpract
 
 import (
 	"fmt"
+	"math/rand"
 	"sync"
 	"time"
 )
@@ -14,6 +15,9 @@ func Run() {
 	fmt.Println("sync package in detail")
 	waitGroupExample()
 	mutexExample()
+	condExample()
+	poolExample()
+	onceExample()
 }
 
 /*waitGroup*/
@@ -83,4 +87,79 @@ func mutexExample() {
 	}
 	wg.Wait()
 	fmt.Println("Count:= ", count) //End result will be 0
+}
+
+/*Cond*/
+/*Cond helps to notify goroutines that a condition
+is occured or wait for certain conditon to occur*/
+func condExample() {
+
+	con := sync.NewCond(&sync.Mutex{}) // creating new Cond vaiable with Mutex
+	queue := make([]int, 0, 10)        //creating queue to store int
+
+	popFunc := func(dt time.Duration) { //function to pop value from queue
+		time.Sleep(dt) //sleep for given time duration
+		con.L.Lock()   //locks to perform operation
+		queue = queue[1:]
+		fmt.Println("Removed from queue")
+		con.L.Unlock() //unclocking
+		con.Signal()   //sending signal for goroutine which are waiting
+
+	}
+
+	for i := 0; i < 10; i++ {
+		con.L.Lock() //locking to perform operation
+		for len(queue) == 2 {
+			con.Wait() //wait if length of queue is 2
+		}
+		fmt.Println("Adding to queue")
+		queue = append(queue, i)    //append queue
+		go popFunc(1 * time.Second) //run popfunc in another goroutine
+		con.L.Unlock()              // unlock
+	}
+	fmt.Println(queue) //print queue with only two values
+}
+
+/*Pool*/
+/*A Pool is a set of temporary objects that may be individually
+saved and retrieved.*/
+func poolExample() {
+
+	rand.Seed(time.Now().Unix()) //seed random with unix
+	myPool := &sync.Pool{        //creating pool
+		New: func() interface{} { //new func which gives new random object
+			fmt.Println("New Random number created")
+			return rand.Intn(15)
+		},
+	}
+
+	num := myPool.Get()             //get the random number from pool
+	println(num.(int))              //print the num
+	myPool.Put(num)                 //put the num into pool
+	fmt.Println(myPool.Get().(int)) //get value from pool and print value
+
+	/*In the above the random number will be created only once*/
+}
+
+/*Once*/
+/*A Pool is a set of temporary objects that may be individually saved and*/
+func onceExample() {
+
+	var num int           //num to increment
+	Increfunc := func() { //increment function
+		num++
+	}
+	var once sync.Once    //creating once object
+	var wg sync.WaitGroup //waitgroup
+	for i := 0; i < 100; i++ {
+
+		wg.Add(1) //adding goroutine in waitgroup
+		go func() {
+			defer wg.Done()
+			once.Do(Increfunc) //incrementing num using Once
+		}()
+	}
+	wg.Wait()
+	fmt.Println("Value of num in Once:= ", num)
+	/*this will increment num once*/
 }

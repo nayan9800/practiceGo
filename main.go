@@ -190,6 +190,9 @@ func main() {
 	/*More Concurrency*/
 	fmt.Println(strings.Repeat("-", 5) + "More concurrency" + strings.Repeat("-", 5))
 	syncpract.Run()
+
+	//to start go chit chat server
+	//syncpract.Startserver()
 }
 
 //In this greet method time.Sleep() method

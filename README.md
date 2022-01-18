@@ -16,4 +16,4 @@ in this the Go basics are covered are following
 ## Go chitChat server
 gochitchat server is simple tcp server build in go. in which **net** package is used to create the server. **map** is used to store current logged in users and the connection are handled concurrenctly using 
 **goroutines**. to run server uncomment the last line in main.go **syncpract.Startserver()**.
-refer code in [gochitchat.go]("./syncpract/gochitchat.go") file.
+refer code in [gochitchat.go]("https://github.com/nayan9800/practiceGo/blob/main/syncpract/gochitchat.go") file.

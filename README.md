@@ -17,3 +17,12 @@ in this the Go basics are covered are following
 gochitchat server is simple tcp server build in go. in which **net** package is used to create the server. **map** is used to store current logged in users and the connection are handled concurrenctly using 
 **goroutines**. to run server uncomment the last line in main.go **syncpract.Startserver()**. refer code 
 in **syncpract/gochitchat.go**.
+
+## Go Package and Modules
+A module is a collection of Go packages stored in a file tree with a go.mod file at its root.
+
+A package in Go is to design and maintain a large number of programs by grouping related     features together into single unit.
+
+In this **pkg/arith** is a local package and 	**github.com/fatih/color** is remote pacakge
+
+

@@ -32,4 +32,10 @@ func main() {
 	fmt.Println(list.Search(5))
 	fmt.Println(list.Delete(2))
 	list.Traverse()
+
+	t := ds.NewBTree()
+	t.Add(5)
+	t.Add(9)
+	t.Add(1)
+	t.Display()
 }

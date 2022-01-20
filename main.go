@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/fatih/color"
-	"github.com/nayan9800/practiceGo/pkg/handerrors"
+	"github.com/nayan9800/practiceGo/pkg/ds"
 	//to import the local package use module name with path of package
 	//<module name>/<path of package folder>
 )
@@ -22,5 +22,14 @@ func main() {
 	//fmt.Println(color.BlueString("Hi this is from remote package go get github.com/fatih/color"))
 
 	/*handling errors*/
-	handerrors.RunHandleError()
+	//handerrors.RunHandleError()
+
+	list := ds.NewLinkedList()
+	list.Insert(1)
+	list.Insert(2)
+	list.Insert(5)
+	list.Traverse()
+	fmt.Println(list.Search(5))
+	fmt.Println(list.Delete(2))
+	list.Traverse()
 }

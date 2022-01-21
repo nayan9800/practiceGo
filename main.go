@@ -2,13 +2,18 @@ package main
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/fatih/color"
-	"github.com/nayan9800/practiceGo/pkg/ds"
+	"github.com/nayan9800/practiceGo/pkg/fileio"
 	//to import the local package use module name with path of package
 	//<module name>/<path of package folder>
 )
 
+func init() {
+
+	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
+}
 func main() {
 	fmt.Println(color.GreenString("Practice Go"))
 
@@ -24,7 +29,7 @@ func main() {
 	/*handling errors*/
 	//handerrors.RunHandleError()
 
-	list := ds.NewLinkedList()
+	/* := ds.NewLinkedList()
 	list.Insert(1)
 	list.Insert(2)
 	list.Insert(5)
@@ -37,5 +42,9 @@ func main() {
 	t.Add(5)
 	t.Add(9)
 	t.Add(1)
-	t.Display()
+	t.Display()*/
+
+	//File io in golang
+	fileio.RunFileio()
+
 }

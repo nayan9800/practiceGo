@@ -5,9 +5,9 @@ import (
 	"log"
 
 	"github.com/fatih/color"
-	"github.com/nayan9800/practiceGo/pkg/netio"
 	//to import the local package use module name with path of package
 	//<module name>/<path of package folder>
+	gogit "github.com/nayan9800/practiceGo/pkg/goGit"
 )
 
 func init() {
@@ -48,5 +48,6 @@ func main() {
 	//fileio.RunFileio()
 
 	//network io in golang
-	netio.RunNetoworkIO()
+	//netio.RunNetoworkIO()
+	gogit.TestGogit()
 }

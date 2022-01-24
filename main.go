@@ -5,9 +5,9 @@ import (
 	"log"
 
 	"github.com/fatih/color"
+	"github.com/nayan9800/practiceGo/pkg/ds"
 	//to import the local package use module name with path of package
 	//<module name>/<path of package folder>
-	gogit "github.com/nayan9800/practiceGo/pkg/goGit"
 )
 
 func init() {
@@ -49,5 +49,22 @@ func main() {
 
 	//network io in golang
 	//netio.RunNetoworkIO()
-	gogit.TestGogit()
+	//gogit.TestGogit()
+
+	/*Stack and Queue*/
+	q := ds.NewQueue()
+	for i := 0; i < 10; i++ {
+		q.Enqueue(i)
+	}
+	q.Show()
+	fmt.Println(q.Dequeue())
+	q.Show()
+
+	s := ds.NewStack()
+	for i := 0; i < 10; i++ {
+		s.Push(i)
+	}
+	s.Show()
+	fmt.Println(s.Pop())
+	s.Show()
 }

@@ -5,9 +5,9 @@ import (
 	"log"
 
 	"github.com/fatih/color"
-	"github.com/nayan9800/practiceGo/pkg/ds"
 	//to import the local package use module name with path of package
 	//<module name>/<path of package folder>
+	"github.com/nayan9800/practiceGo/pkg/cmd"
 )
 
 func init() {
@@ -52,7 +52,7 @@ func main() {
 	//gogit.TestGogit()
 
 	/*Stack and Queue*/
-	q := ds.NewQueue()
+	/*q := ds.NewQueue()
 	for i := 0; i < 10; i++ {
 		q.Enqueue(i)
 	}
@@ -66,5 +66,6 @@ func main() {
 	}
 	s.Show()
 	fmt.Println(s.Pop())
-	s.Show()
+	s.Show()*/
+	cmd.Execute()
 }

@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/go-git/go-billy/v5/memfs"
 	"github.com/go-git/go-git/v5"
@@ -14,14 +15,48 @@ import (
 	"github.com/go-git/go-git/v5/storage/memory"
 )
 
+type Commit struct {
+	Hash       string
+	Author     string
+	AuthorName string
+	When       string
+	Message    string
+}
+
 var (
 	gitLog = log.New(os.Stdout, "GITLOG:", log.LstdFlags|log.Lshortfile)
 )
 
-func loadRepo(path string) *git.Repository {
+/*Get all Commits from head ordered in commit time*/
+func GetAllComits(repo *git.Repository) ([]Commit, error) {
+	commits := []Commit{}
+	head, err := repo.Head()
+	if err != nil {
+		return commits, err
+	}
+	comitIter, err := repo.Log(&git.LogOptions{From: head.Hash(),
+		All:   true,
+		Order: git.LogOrderCommitterTime})
+
+	comitIter.ForEach(func(c *object.Commit) error {
+		commits = append(commits,
+			Commit{
+				Hash:       c.Hash.String(),
+				Author:     c.Author.Email,
+				AuthorName: c.Author.Name,
+				When:       c.Committer.When.Format(time.RFC1123Z),
+				Message:    c.Message,
+			},
+		)
+		return nil
+	})
+	return commits, err
+}
+
+/*load the given repository in memory*/
+func LoadRepo(path string) *git.Repository {
 	repo, err := git.Clone(memory.NewStorage(), memfs.New(), &git.CloneOptions{
-		URL:      path,
-		Progress: os.Stdout,
+		URL: path,
 	})
 	if err != nil {
 		gitLog.Println(err.Error())
@@ -95,7 +130,7 @@ func isRemote(ref *plumbing.Reference) bool {
 }
 
 //TODO: git log
-func Log(repo *git.Repository) {
+/*func Log(repo *git.Repository) {
 
 	ref, err := repo.Head()
 	if err != nil {
@@ -110,7 +145,8 @@ func Log(repo *git.Repository) {
 		gitLog.Println(c.Hash, " ", c.Message)
 		return nil
 	})
-}
+
+}*/
 
 //TODO: git cherry pick up
 func CherryPickUp(repo *git.Repository) {
@@ -119,7 +155,7 @@ func TestGogit() {
 
 	repo, err := Clone("./testdata", "https://github.com/fatih/color.git")
 	if err == git.ErrRepositoryAlreadyExists {
-		repo = loadRepo("./testdata/color")
+		repo = LoadRepo("./testdata/color")
 	}
 	h, _ := repo.Head()
 	gitLog.Println(h.Hash())

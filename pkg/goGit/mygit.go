@@ -7,12 +7,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/go-git/go-billy/v5/memfs"
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
 	"github.com/go-git/go-git/v5/plumbing/object"
 	"github.com/go-git/go-git/v5/plumbing/storer"
-	"github.com/go-git/go-git/v5/storage/memory"
 )
 
 type Commit struct {
@@ -27,6 +25,7 @@ var (
 	gitLog = log.New(os.Stdout, "GITLOG:", log.LstdFlags|log.Lshortfile)
 )
 
+//git log
 /*Get all Commits from head ordered in commit time*/
 func GetAllComits(repo *git.Repository) ([]Commit, error) {
 	commits := []Commit{}
@@ -53,18 +52,21 @@ func GetAllComits(repo *git.Repository) ([]Commit, error) {
 	return commits, err
 }
 
+//git push
+func Gitpush(repo *git.Repository) error {
+	return repo.Push(&git.PushOptions{})
+}
+
 /*load the given repository in memory*/
 func LoadRepo(path string) *git.Repository {
-	repo, err := git.Clone(memory.NewStorage(), memfs.New(), &git.CloneOptions{
-		URL: path,
-	})
+	repo, err := git.PlainOpen(path)
 	if err != nil {
 		gitLog.Println(err.Error())
 	}
 	return repo
 }
 
-//TODO: git plain clone
+//git clone
 func Clone(path, url string) (*git.Repository, error) {
 	name := getGitRepoName(url)
 	repo, err := git.PlainClone(filepath.Join(path, name), false, &git.CloneOptions{

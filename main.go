@@ -5,9 +5,9 @@ import (
 	"log"
 
 	"github.com/fatih/color"
+	"github.com/nayan9800/practiceGo/pkg/cmd"
 	//to import the local package use module name with path of package
 	//<module name>/<path of package folder>
-	"github.com/nayan9800/practiceGo/pkg/cmd"
 )
 
 func init() {

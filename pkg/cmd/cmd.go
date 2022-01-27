@@ -29,8 +29,20 @@ var (
 		Short: "log's the commit history",
 		RunE:  logRun,
 	}
+
+	pushCmd = &cobra.Command{
+		Use:   "push",
+		Short: "push changes to remote",
+		Run:   pushRun,
+	}
 )
 
+func pushRun(cmd *cobra.Command, args []string) {
+	repo := gogit.LoadRepo(".")
+	if err := gogit.Gitpush(repo); err != nil {
+		log.Println(err.Error())
+	}
+}
 func logRun(cmd *cobra.Command, args []string) (err error) {
 
 	path, _ := cmd.Flags().GetString("path")
@@ -56,6 +68,7 @@ func Execute() {
 	cloneCmd.Flags().StringP("path", "p", ".", "path of working directory")
 	rootcmd.AddCommand(cloneCmd)
 	rootcmd.AddCommand(logCmd)
+	rootcmd.AddCommand(pushCmd)
 	if err := rootcmd.Execute(); err != nil {
 		cmdLog.Fatal(err.Error())
 	}

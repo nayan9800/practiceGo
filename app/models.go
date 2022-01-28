@@ -10,6 +10,7 @@ import (
 	"gorm.io/gorm"
 )
 
+/*car model*/
 type Car struct {
 	gorm.Model
 	CarMake      string `json:"car_make"`
@@ -18,7 +19,37 @@ type Car struct {
 	Description  string `json:"description"`
 }
 
-func init() {
+/*car json model*/
+type CarJson struct {
+	ID           uint   `json:"id"`
+	CarMake      string `json:"car_make"`
+	CarModel     string `json:"car_model"`
+	CarModelYear int32  `json:"car_model_year"`
+	Description  string `json:"description"`
+}
+
+/*converts car model to carJson model*/
+func (car Car) ToCarJson() CarJson {
+
+	return CarJson{
+		ID:           car.Model.ID,
+		CarMake:      car.CarMake,
+		CarModel:     car.CarModel,
+		CarModelYear: car.CarModelYear,
+		Description:  car.Description}
+
+}
+
+/*converts slice of car to slice of carjson*/
+func carsTocarJson(cars []Car) (carJsons []CarJson) {
+	for _, c := range cars {
+		carJsons = append(carJsons, c.ToCarJson())
+	}
+	return
+}
+
+/*setup to create sqlite database*/
+func SetupSqlite() {
 
 	_, err := os.Stat(DATABASE)
 	if os.IsNotExist(err) {
@@ -42,6 +73,8 @@ func init() {
 		dbLog.Println(DATABASE, " already exists")
 	}
 }
+
+/*loads test data form MOCK_DATA.json to slice car*/
 func loadMockData() ([]Car, error) {
 	carsData := []Car{}
 	f, err := os.Open("./app/tmp/MOCK_DATA.json")

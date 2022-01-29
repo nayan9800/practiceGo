@@ -1,9 +1,12 @@
 package app
 
 import (
+	"context"
 	"log"
 	"net/http"
 	"os"
+	"os/signal"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -24,6 +27,14 @@ func Run() {
 	/*gin router*/
 	route := gin.Default()
 
+	/*server struct*/
+	server := http.Server{
+		Addr:           ":8080",
+		Handler:        route,
+		ReadTimeout:    time.Duration(10 * time.Second),
+		WriteTimeout:   time.Duration(15 * time.Second),
+		MaxHeaderBytes: 1 << 20,
+	}
 	/*gives the status of api*/
 	route.GET("api/v1/status", func(c *gin.Context) {
 		c.JSON(http.StatusAccepted, gin.H{
@@ -101,8 +112,20 @@ func Run() {
 	})
 
 	/*run app at given port*/
-	if err := route.Run(":8080"); err != nil {
-		netLog.Fatal(err.Error())
-	}
+	go func() {
+		if err := server.ListenAndServe(); err != nil {
+			netLog.Fatal(err.Error())
+		}
+	}()
 
+	/*use gracefull shutdown */
+	ch := make(chan os.Signal, 1)
+	signal.Notify(ch)
+
+	<-ch
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*20)
+	defer cancel()
+
+	server.Shutdown(ctx)
+	os.Exit(0)
 }

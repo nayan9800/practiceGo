@@ -1,5 +1,6 @@
 package main
 
+//This is practice repoitory for go
 import (
 	"log"
 
